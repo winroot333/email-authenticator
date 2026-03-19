@@ -7,6 +7,9 @@ spring:
     username: postgres
     password: password
     driver-class-name: org.postgresql.Driver
-token:
-  signing:
-    key: 53A73E5F1C4E0A2D3B5F2D784E6AGG423D6F247D1F6E5C3A596D635A75327855
+application:
+  token:
+    signing:
+      key: 53A73E5F1C4E0A2D3B5F2D784E6AGG423D6F247D1F6E5C3A596D635A75327855
+  confirmation-code:
+    expiration-in-minutes: 15

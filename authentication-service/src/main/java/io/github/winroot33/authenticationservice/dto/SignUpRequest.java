@@ -8,7 +8,6 @@ import jakarta.validation.constraints.Size;
 
 @Schema(description = "Запрос на регистрацию")
 public record SignUpRequest(
-
         @Schema(description = "Адрес электронной почты", example = "admin@example.com",
                 requiredMode = Schema.RequiredMode.REQUIRED)
         @Size(min = 5, max = 255, message = "Адрес электронной почты должен содержать от 5 до 255 символов")
@@ -16,7 +15,7 @@ public record SignUpRequest(
         @Email(message = "Email адрес должен быть в формате user@example.com")
         String email,
 
-        @Schema(description = "Пароль", example = "my_1secret1_password", requiredMode = Schema.RequiredMode.REQUIRED)
+        @Schema(description = "Пароль", example = "password", requiredMode = Schema.RequiredMode.REQUIRED)
         @Size(min = 8, max = 255, message = "Длина пароля должна быть от 8 до 255 символов")
         @NotBlank(message = "Пароль не может быть пустым")
         String password

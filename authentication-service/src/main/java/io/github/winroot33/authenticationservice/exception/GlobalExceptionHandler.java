@@ -18,8 +18,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({
             IllegalArgumentException.class,
             MethodArgumentNotValidException.class,
+            HandlerMethodValidationException.class,
+            UserNotFoundException.class,
             UserAlreadyExistsException.class,
-            HandlerMethodValidationException.class
+            WrongConfirmationCodeException.class,
+            EmailAlreadyConfirmedException.class,
     })
     public ResponseEntity<ErrorResponse> handleBadRequest(Exception e) {
         return createErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
@@ -30,8 +33,11 @@ public class GlobalExceptionHandler {
         return createErrorResponse(HttpStatus.UNAUTHORIZED, e.getMessage());
     }
 
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ErrorResponse> handleForbidden(AccessDeniedException e) {
+    @ExceptionHandler({
+            AccessDeniedException.class,
+            EmailNotConfirmedException.class,
+    })
+    public ResponseEntity<ErrorResponse> handleForbidden(Exception e) {
         return createErrorResponse(HttpStatus.FORBIDDEN, e.getMessage());
     }
 

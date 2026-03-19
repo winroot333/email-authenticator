@@ -1,14 +1,16 @@
 databaseChangeLog:
   - changeSet:
-      id: create-users-table
+      id: create-confirmation-codes-table
       author: Mikhail
       preConditions:
+        - tableExists:
+            tableName: users
         - not:
             - tableExists:
-                tableName: users
+                tableName: confirmation_codes
       changes:
         - createTable:
-            tableName: users
+            tableName: confirmation_codes
             columns:
               - column:
                   name: id
@@ -17,24 +19,24 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     primaryKey: true
-                    primaryKeyName: pk_users
+                    primaryKeyName: pk_confirmation_codes
 
               - column:
-                  name: email
-                  type: VARCHAR(255)
-                  constraints:
-                    nullable: false
-                    unique: true
-                    uniqueConstraintName: uk_users_email
-              - column:
-                  name: email_confirmed
-                  type: BOOLEAN
-                  defaultValueBoolean: false
+                  name: code
+                  type: VARCHAR(6)
                   constraints:
                     nullable: false
 
               - column:
-                  name: password
-                  type: VARCHAR(255)
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_email_codes_user
+                    references: users(id)
+
+              - column:
+                  name: expires_at
+                  type: TIMESTAMP
                   constraints:
                     nullable: false

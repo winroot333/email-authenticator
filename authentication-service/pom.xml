@@ -30,6 +30,7 @@
         <java.version>17</java.version>
         <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
         <jjwt.version>0.13.0</jjwt.version>
+        <commons-lang3.version>3.20.0</commons-lang3.version>
     </properties>
     <dependencies>
         <dependency>
@@ -83,6 +84,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-liquibase</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

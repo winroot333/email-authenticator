@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
  */
 @Schema(description = "Ответ с информацией об ошибке")
 public record ErrorResponse(
-
         @Schema(description = "Сообщение об ошибке", example = "Пользователь не найден")
         String error
 ) {
