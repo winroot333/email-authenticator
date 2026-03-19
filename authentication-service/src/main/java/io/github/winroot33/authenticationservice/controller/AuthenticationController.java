@@ -1,6 +1,6 @@
 package io.github.winroot33.authenticationservice.controller;
 
-import io.github.winroot33.authenticationservice.dto.JwtAuthenticationResponse;
+import io.github.winroot33.authenticationservice.dto.SignInResponse;
 import io.github.winroot33.authenticationservice.dto.SignUpRequest;
 import io.github.winroot33.authenticationservice.service.UserService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -24,11 +24,11 @@ public class AuthenticationController {
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/sign-up")
-    public JwtAuthenticationResponse signUp(@RequestBody @Valid SignUpRequest request) {
+    public SignInResponse signUp(@RequestBody @Valid SignUpRequest request) {
         String token = userService.handleRegistration(
-                request.getEmail(),
-                passwordEncoder.encode(request.getPassword())
+                request.email(),
+                passwordEncoder.encode(request.password())
         );
-        return new JwtAuthenticationResponse(token);
+        return new SignInResponse(token);
     }
 }
