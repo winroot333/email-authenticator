@@ -9,5 +9,7 @@
   <url>http://maven.apache.org</url>
   <modules>
     <module>common-dto</module>
+    <module>email-notification-service</module>
+    <module>authentication-service</module>
   </modules>
 </project>
