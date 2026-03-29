@@ -17,6 +17,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final ConfirmationCodeService confirmationCodeService;
     private final PasswordEncoder passwordEncoder;
+    private final NotificationService notificationService;
 
     private static void checkEmailNotConfirmed(User user) {
         if (user.isEmailConfirmed()) {
@@ -65,8 +66,8 @@ public class UserService {
 
     private void sendConfirmationCode(User user) {
         checkEmailNotConfirmed(user);
-        var confirmationCode = confirmationCodeService.generateForUser(user);
-        //todo закомментировать потом
-        System.out.println(confirmationCode.getCode());
+        var confirmationCode = confirmationCodeService.createForUser(user);
+
+        notificationService.sendNotificationCode(confirmationCode);
     }
 }

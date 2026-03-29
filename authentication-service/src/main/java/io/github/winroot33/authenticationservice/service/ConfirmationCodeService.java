@@ -18,7 +18,7 @@ public class ConfirmationCodeService {
     @Value("${application.confirmation-code.expiration-in-minutes}")
     private Integer confirmationCodeExpirationMinutes;
 
-    public ConfirmationCode generateForUser(User user) {
+    public ConfirmationCode createForUser(User user) {
         var code = ConfirmationCode.builder()
                 .code(generateCode())
                 .expiresAt(LocalDateTime.now().plusMinutes(confirmationCodeExpirationMinutes))

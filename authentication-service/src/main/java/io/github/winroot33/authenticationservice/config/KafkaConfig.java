@@ -1,21 +1,62 @@
 package io.github.winroot33.authenticationservice.config;
 
+import io.github.winroot33.dtos.NotificationMessageDto;
+import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.serialization.StringSerializer;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.TopicBuilder;
+import org.springframework.kafka.core.DefaultKafkaProducerFactory;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.support.serializer.JacksonJsonSerializer;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
+@EnableConfigurationProperties(KafkaConfigurationProperties.class)
+@RequiredArgsConstructor
 public class KafkaConfig {
+
+    private final KafkaConfigurationProperties kafkaConfig;
+
+    @Value("${spring.kafka.bootstrap-servers}")
+    private String bootstrapAddress;
+
+    @Bean
+    public ProducerFactory<String, NotificationMessageDto> producerFactory() {
+        Map<String, Object> configProps = new HashMap<>();
+        configProps.put(
+                ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
+                bootstrapAddress);
+        configProps.put(
+                ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
+                StringSerializer.class);
+        configProps.put(
+                ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
+                JacksonJsonSerializer.class);
+        //todo эти проперти добавить
+//        #      properties:
+//#        enable:
+//#          idempotence: true
+        return new DefaultKafkaProducerFactory<>(configProps);
+    }
+
+    @Bean
+    public KafkaTemplate<String, NotificationMessageDto> kafkaTemplate() {
+        return new KafkaTemplate<>(producerFactory());
+    }
 
     @Bean
     NewTopic createTopic() {
-        return TopicBuilder.name("client-notification-event-topic")
-                .partitions(3)
-                .replicas(3)
-                .configs(Map.of("min.insync.replicas", "2"))
+        return TopicBuilder.name(kafkaConfig.topicName())
+                .partitions(kafkaConfig.partitionCount())
+                .replicas(kafkaConfig.replicaCount())
                 .build();
     }
 }

@@ -41,7 +41,10 @@ public class GlobalExceptionHandler {
         return createErrorResponse(HttpStatus.FORBIDDEN, e.getMessage());
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler({
+            KafkaSendNotificationException.class,
+            Exception.class,
+    })
     public ResponseEntity<ErrorResponse> handleAll(Exception e) {
         return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Server error - " + e.getMessage());
     }
