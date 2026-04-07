@@ -12,4 +12,5 @@ public record SignUpResponse(
 
         @Schema(description = "Id созданного пользователя", example = "2")
         Long userId
-) {}
+) {
+}

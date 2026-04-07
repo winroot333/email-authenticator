@@ -19,7 +19,6 @@ public class GlobalExceptionHandler {
             IllegalArgumentException.class,
             MethodArgumentNotValidException.class,
             HandlerMethodValidationException.class,
-            UserNotFoundException.class,
             UserAlreadyExistsException.class,
             WrongConfirmationCodeException.class,
             EmailAlreadyConfirmedException.class,
@@ -31,6 +30,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorResponse> handleUnauthorized(BadCredentialsException e) {
         return createErrorResponse(HttpStatus.UNAUTHORIZED, e.getMessage());
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFound(Exception e) {
+        return createErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
     }
 
     @ExceptionHandler({

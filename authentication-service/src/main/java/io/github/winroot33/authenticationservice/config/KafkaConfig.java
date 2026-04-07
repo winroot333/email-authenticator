@@ -13,7 +13,7 @@ import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
-import org.springframework.kafka.support.serializer.JacksonJsonSerializer;
+import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +23,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class KafkaConfig {
 
-    private final KafkaConfigurationProperties kafkaConfig;
+    private final KafkaConfigurationProperties kafkaConfigurationProperties;
 
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapAddress;
@@ -31,19 +31,10 @@ public class KafkaConfig {
     @Bean
     public ProducerFactory<String, NotificationMessageDto> producerFactory() {
         Map<String, Object> configProps = new HashMap<>();
-        configProps.put(
-                ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
-                bootstrapAddress);
-        configProps.put(
-                ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
-                StringSerializer.class);
-        configProps.put(
-                ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
-                JacksonJsonSerializer.class);
-        //todo эти проперти добавить
-//        #      properties:
-//#        enable:
-//#          idempotence: true
+        configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
+        configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+
         return new DefaultKafkaProducerFactory<>(configProps);
     }
 
@@ -54,9 +45,9 @@ public class KafkaConfig {
 
     @Bean
     NewTopic createTopic() {
-        return TopicBuilder.name(kafkaConfig.topicName())
-                .partitions(kafkaConfig.partitionCount())
-                .replicas(kafkaConfig.replicaCount())
+        return TopicBuilder.name(kafkaConfigurationProperties.topicName())
+                .partitions(kafkaConfigurationProperties.partitionCount())
+                .replicas(kafkaConfigurationProperties.replicaCount())
                 .build();
     }
 }

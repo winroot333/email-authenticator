@@ -5,7 +5,6 @@ import io.github.winroot33.authenticationservice.entity.ConfirmationCode;
 import io.github.winroot33.authenticationservice.exception.KafkaSendNotificationException;
 import io.github.winroot33.dtos.NotificationMessageDto;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -33,7 +32,10 @@ public class NotificationService {
             log.info("Notification sent successfully: offset={}, partition={}",
                     result.getRecordMetadata().offset(),
                     result.getRecordMetadata().partition());
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new KafkaSendNotificationException("Не удалось отправить код подтверждения, попробуйте заново");
+        } catch (ExecutionException e) {
             throw new KafkaSendNotificationException("Не удалось отправить код подтверждения, попробуйте заново");
         }
     }
