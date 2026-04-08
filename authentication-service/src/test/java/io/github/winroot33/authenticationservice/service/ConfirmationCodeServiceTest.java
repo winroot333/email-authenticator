@@ -13,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -29,10 +30,17 @@ class ConfirmationCodeServiceTest {
     @InjectMocks
     private ConfirmationCodeService confirmationCodeService;
 
+    private static User createTestUser() {
+        return User.builder()
+                .id(1L)
+                .email("test@example.com")
+                .build();
+    }
+
     @Test
     @DisplayName("Создание кода подтверждения: успешное создание с корректными данными")
     void createForUser_ShouldCreateAndReturnCode() {
-        User user = User.builder().id(1L).build();
+        User user = createTestUser();
         ReflectionTestUtils.setField(confirmationCodeService, "confirmationCodeExpirationMinutes", 30);
 
         when(confirmationCodeRepository.save(any(ConfirmationCode.class)))
@@ -54,16 +62,21 @@ class ConfirmationCodeServiceTest {
     @DisplayName("Валидация кода: успешная валидация при корректном коде")
     void validateCode_ShouldSucceed_WhenCodeIsValid() {
         Long userId = 1L;
+        User user = createTestUser();
         String code = "ABC123";
-        when(confirmationCodeRepository
-                .existsByUserIdAndCodeAndExpiresAtAfter(eq(userId), eq(code), any(LocalDateTime.class)))
-                .thenReturn(true);
+        LocalDateTime futureTime = LocalDateTime.now().plusMinutes(10);
+        ConfirmationCode confirmationCode = ConfirmationCode.builder()
+                .user(user)
+                .code(code)
+                .expiresAt(futureTime)
+                .build();
 
+        when(confirmationCodeRepository.findByUserIdAndCode(userId, code))
+                .thenReturn(Optional.of(confirmationCode));
 
         confirmationCodeService.validateCode(userId, code);
 
-        verify(confirmationCodeRepository)
-                .existsByUserIdAndCodeAndExpiresAtAfter(eq(userId), eq(code), any(LocalDateTime.class));
+        verify(confirmationCodeRepository).findByUserIdAndCode(userId, code);
     }
 
     @Test
@@ -71,14 +84,36 @@ class ConfirmationCodeServiceTest {
     void validateCode_ShouldThrowException_WhenCodeIsInvalid() {
         Long userId = 1L;
         String invalidCode = "WRONG";
-        when(confirmationCodeRepository
-                .existsByUserIdAndCodeAndExpiresAtAfter(eq(userId), eq(invalidCode), any(LocalDateTime.class)))
-                .thenReturn(false);
+        when(confirmationCodeRepository.findByUserIdAndCode(userId, invalidCode))
+                .thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> confirmationCodeService.validateCode(userId, invalidCode))
                 .isInstanceOf(WrongConfirmationCodeException.class);
 
-        verify(confirmationCodeRepository)
-                .existsByUserIdAndCodeAndExpiresAtAfter(eq(userId), eq(invalidCode), any(LocalDateTime.class));
+        verify(confirmationCodeRepository).findByUserIdAndCode(userId, invalidCode);
+    }
+
+    @Test
+    @DisplayName("Валидация кода: выбрасывает исключение при просроченном коде")
+    void validateCode_ShouldThrowException_WhenCodeIsExpired() {
+        Long userId = 1L;
+        User user = createTestUser();
+        String code = "ABC123";
+        LocalDateTime expiredTime = LocalDateTime.now().minusMinutes(50);
+
+        ConfirmationCode expiredCode = ConfirmationCode.builder()
+                .user(user)
+                .code(code)
+                .expiresAt(expiredTime)
+                .build();
+
+        when(confirmationCodeRepository.findByUserIdAndCode(userId, code))
+                .thenReturn(Optional.of(expiredCode));
+
+        assertThatThrownBy(() -> confirmationCodeService.validateCode(userId, code))
+                .isInstanceOf(WrongConfirmationCodeException.class)
+                .hasMessage("Время для подтверждения истекло, попробуйте заново");
+
+        verify(confirmationCodeRepository).findByUserIdAndCode(userId, code);
     }
 }

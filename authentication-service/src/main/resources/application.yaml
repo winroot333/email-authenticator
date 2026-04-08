@@ -20,3 +20,4 @@ application:
     topic-name: "client-notification-event-topic"
     partition-count: 3
     replica-count: 2
+    producer-type: spring

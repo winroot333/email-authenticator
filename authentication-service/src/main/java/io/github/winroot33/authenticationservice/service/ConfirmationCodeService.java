@@ -27,12 +27,12 @@ public class ConfirmationCodeService {
         return confirmationCodeRepository.save(code);
     }
 
-    public void validateCode(Long userId, String code) {
-        boolean isValid = confirmationCodeRepository
-                .existsByUserIdAndCodeAndExpiresAtAfter(userId, code, LocalDateTime.now());
-
-        if (!isValid) {
-            throw new WrongConfirmationCodeException("Неверный код подтверждения");
+    public void validateCode(Long userId, String codeString) {
+        var codeOptional = confirmationCodeRepository.findByUserIdAndCode(userId, codeString);
+        ConfirmationCode code = codeOptional
+                .orElseThrow(() -> new WrongConfirmationCodeException("Неверный код подтверждения"));
+        if (code.getExpiresAt().isBefore(LocalDateTime.now())) {
+            throw new WrongConfirmationCodeException("Время для подтверждения истекло, попробуйте заново");
         }
     }
 

@@ -19,17 +19,13 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
-import static org.awaitility.Awaitility.await;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @EmbeddedKafka
-class KafkaNotificationConsumerIntegrationTest {
+class KafkaSpringNotificationConsumerIntegrationTest {
 
-    @Autowired
-    KafkaNotificationConsumer kafkaNotificationConsumer;
     @Autowired
     private EmbeddedKafkaBroker embeddedKafkaBroker;
     @Autowired
@@ -49,11 +45,9 @@ class KafkaNotificationConsumerIntegrationTest {
 
         sendKafkaMessage("test@example.com", dto);
 
-        await().atMost(5, TimeUnit.SECONDS)
-                .untilAsserted(() ->
-                        verify(emailNotificationService, times(1))
-                                .sendNotificationCode("test@example.com", "123456", expiresAt)
-                );
+        verify(emailNotificationService, timeout(5000).times(1))
+                .sendNotificationCode("test@example.com", "123456", expiresAt);
+
     }
 
     private void sendKafkaMessage(String key, NotificationMessageDto dto) throws ExecutionException, InterruptedException {
@@ -78,10 +72,9 @@ class KafkaNotificationConsumerIntegrationTest {
         var invalidData = "{\"wrongField\":\"value\", \"code\":123, \"email\":\"test@example.com\"}";
         sendInvalidKafkaMessage("test@example.com", invalidData);
 
-        await().atMost(5, TimeUnit.SECONDS)
-                .untilAsserted(() ->
-                        verify(emailNotificationService, never()).sendNotificationCode(any(), any(), any())
-                );
+        Thread.sleep(2000);
+        verify(emailNotificationService, never())
+                .sendNotificationCode(any(), any(), any());
     }
 
     private void sendInvalidKafkaMessage(String key, String invalidData) throws Exception {

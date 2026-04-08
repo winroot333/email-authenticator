@@ -6,6 +6,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public record KafkaConfigurationProperties(
         String topicName,
         Integer partitionCount,
-        Integer replicaCount
+        Integer replicaCount,
+        ProducerType producerType
 ) {
+    public enum ProducerType {
+        NATIVE,
+        SPRING
+    }
 }

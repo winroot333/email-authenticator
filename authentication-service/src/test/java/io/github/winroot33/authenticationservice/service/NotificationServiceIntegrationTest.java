@@ -2,6 +2,7 @@ package io.github.winroot33.authenticationservice.service;
 
 import io.github.winroot33.authenticationservice.entity.ConfirmationCode;
 import io.github.winroot33.authenticationservice.entity.User;
+import io.github.winroot33.authenticationservice.service.kafka.KafkaNativeTopicManager;
 import io.github.winroot33.dtos.NotificationMessageDto;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -22,6 +23,7 @@ import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.kafka.test.utils.ContainerTestUtils;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -37,7 +39,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase
 @EmbeddedKafka
-@SpringBootTest
+@SpringBootTest()
+
 @DisplayName("Интеграционные тесты с Kafka")
 class NotificationServiceIntegrationTest {
 
@@ -47,6 +50,9 @@ class NotificationServiceIntegrationTest {
     private NotificationService notificationService;
     @Autowired
     private EmbeddedKafkaBroker embeddedKafkaBroker;
+
+    @MockitoBean
+    private KafkaNativeTopicManager kafkaNativeTopicManager;
 
     private KafkaMessageListenerContainer<String, NotificationMessageDto> container;
     private BlockingQueue<ConsumerRecord<String, NotificationMessageDto>> records;

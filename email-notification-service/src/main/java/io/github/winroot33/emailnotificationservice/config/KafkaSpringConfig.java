@@ -5,11 +5,13 @@ import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 
@@ -18,7 +20,8 @@ import java.util.Map;
 
 @Configuration
 @RequiredArgsConstructor
-public class KafkaConfig {
+@ConditionalOnProperty(name = "application.kafka-notification-topic.consumer-type", havingValue = "spring")
+public class KafkaSpringConfig {
 
     public static final String TRUSTED_DTO_PACKAGE = "io.github.winroot33.dtos";
     @Value("${spring.kafka.bootstrap-servers}")
@@ -51,6 +54,7 @@ public class KafkaConfig {
         ConcurrentKafkaListenerContainerFactory<String, NotificationMessageDto> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
+        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);
         return factory;
     }
 }

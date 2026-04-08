@@ -9,3 +9,4 @@ spring:
 application:
   kafka-notification-topic:
     name: "client-notification-event-topic"
+    consumer-type: native

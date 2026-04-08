@@ -6,6 +6,7 @@ import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +22,8 @@ import java.util.Map;
 @Configuration
 @EnableConfigurationProperties(KafkaConfigurationProperties.class)
 @RequiredArgsConstructor
-public class KafkaConfig {
+@ConditionalOnProperty(name = "application.kafka-notification-topic.producer-type", havingValue = "spring")
+public class KafkaSpringConfig {
 
     private final KafkaConfigurationProperties kafkaConfigurationProperties;
 
@@ -29,6 +31,7 @@ public class KafkaConfig {
     private String bootstrapAddress;
 
     @Bean
+
     public ProducerFactory<String, NotificationMessageDto> producerFactory() {
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
