@@ -19,6 +19,11 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Класс конфигурации для Kafka Producer с использованием Spring Kafka
+ *
+ * @author Mikhail Vasiliev (winroot123@gmail.com)
+ */
 @Configuration
 @EnableConfigurationProperties(KafkaConfigurationProperties.class)
 @RequiredArgsConstructor

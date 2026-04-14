@@ -16,6 +16,11 @@ import java.util.Map;
 import java.util.function.Function;
 
 
+/**
+ * Сервис для работы с JWT токенами
+ *
+ * @author Mikhail Vasiliev (winroot123@gmail.com)
+ */
 @Service
 public class JwtService {
     @Value("${application.token.signing.key}")

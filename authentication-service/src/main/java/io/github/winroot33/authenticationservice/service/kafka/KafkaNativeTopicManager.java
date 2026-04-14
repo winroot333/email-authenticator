@@ -17,6 +17,11 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * Класс для создания топика при старте приложения с нативным apache kafka
+ *
+ * @author Mikhail Vasiliev (winroot123@gmail.com)
+ */
 @Component
 @ConditionalOnProperty(name = "application.kafka-notification-topic.producer-type", havingValue = "native")
 @RequiredArgsConstructor
@@ -49,11 +54,10 @@ public class KafkaNativeTopicManager {
                         kafkaConfig.replicaCount().shortValue()
                 );
             }
-        }catch (InterruptedException e){
+        } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new KafkaSendNotificationException("Не удалось создать топик: " + kafkaConfig.topicName());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new KafkaSendNotificationException("Не удалось создать топик: " + kafkaConfig.topicName());
         }
     }

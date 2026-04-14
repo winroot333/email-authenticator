@@ -11,6 +11,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ExecutionException;
 
+/**
+ * Producer для отправки уведомлений в Kafka с использованием Spring Kafka
+ *
+ * @author Mikhail Vasiliev (winroot123@gmail.com)
+ */
 @ConditionalOnProperty(name = "application.kafka-notification-topic.producer-type", havingValue = "spring")
 @RequiredArgsConstructor
 @Slf4j
@@ -26,7 +31,7 @@ public class KafkaSpringNotificationProducer implements KafkaNotificationProduce
 
         try {
             var result = kafkaTemplate.send(kafkaConfig.topicName(), dto.getEmail(), dto).get();
-            log.info("Spring Kafka sent successfully: offset={}, partition={}",
+            log.info("Spring Kafka sent successfully: offset = {}, partition = {}",
                     result.getRecordMetadata().offset(),
                     result.getRecordMetadata().partition());
         } catch (InterruptedException e) {

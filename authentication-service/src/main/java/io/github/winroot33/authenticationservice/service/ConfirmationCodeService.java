@@ -11,6 +11,11 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+/**
+ * Сервис для работы с кодами подтверждения
+ *
+ * @author Mikhail Vasiliev (winroot123@gmail.com)
+ */
 @Service
 @RequiredArgsConstructor
 public class ConfirmationCodeService {
@@ -18,6 +23,12 @@ public class ConfirmationCodeService {
     @Value("${application.confirmation-code.expiration-in-minutes}")
     private Integer confirmationCodeExpirationMinutes;
 
+    /**
+     * Создания кода подтверждения почты для пользователя
+     *
+     * @param user пользователь для кого создаем код
+     * @return новый код подтверждения
+     */
     public ConfirmationCode createForUser(User user) {
         var code = ConfirmationCode.builder()
                 .code(generateCode())
@@ -27,6 +38,12 @@ public class ConfirmationCodeService {
         return confirmationCodeRepository.save(code);
     }
 
+    /**
+     * Проверка кода подтверждения для пользователя
+     *
+     * @param userId     пользователь для проверки
+     * @param codeString код в текстовом виде
+     */
     public void validateCode(Long userId, String codeString) {
         var codeOptional = confirmationCodeRepository.findByUserIdAndCode(userId, codeString);
         ConfirmationCode code = codeOptional
@@ -36,6 +53,11 @@ public class ConfirmationCodeService {
         }
     }
 
+    /**
+     * Генерация кода подтверждения
+     *
+     * @return новый рандомный код подтверждения
+     */
     private String generateCode() {
         return RandomStringUtils.secure().nextAlphanumeric(6).toUpperCase();
     }

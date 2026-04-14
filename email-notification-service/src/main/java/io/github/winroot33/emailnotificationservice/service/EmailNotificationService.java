@@ -5,6 +5,11 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+/**
+ * Сервис для эмуляции отправки кодов подтверждения на почту
+ *
+ * @author Mikhail Vasiliev (winroot123@gmail.com)
+ */
 @Service
 @Log4j2
 public class EmailNotificationService {

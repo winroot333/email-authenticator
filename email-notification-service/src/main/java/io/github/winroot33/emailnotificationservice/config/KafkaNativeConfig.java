@@ -10,6 +10,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 
+/**
+ * Конфигурация Kafka Consumer c чистым apache kafka, без spring kafka
+ *
+ * @author Mikhail Vasiliev (winroot123@gmail.com)
+ */
 @Slf4j
 @Configuration
 @ConditionalOnProperty(name = "application.kafka-notification-topic.consumer-type", havingValue = "native")

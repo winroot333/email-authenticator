@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+/**
+ * Общее DTO для отправки кода подтверждения в Kafka
+ */
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

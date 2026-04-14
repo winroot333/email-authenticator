@@ -29,6 +29,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
 
+    /**
+     * Метод для получения заголовка с аутентификацией, jwt токеном из запроса
+     */
+    private static String getAuthHeader(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+        var authHeader = request.getHeader(HEADER_NAME);
+        if (!StringUtils.hasLength(authHeader) || !StringUtils.startsWithIgnoreCase(authHeader, BEARER_PREFIX)) {
+            filterChain.doFilter(request, response);
+            return null;
+        }
+        return authHeader;
+    }
+
+    /**
+     * Метод для обработки аутентификации. Получает токен из хедера,
+     * проверяет его и аутентифицирует пользователя при валидном токене.
+     */
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
@@ -36,22 +52,29 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
 
-        // Получаем токен из заголовка
-        var authHeader = request.getHeader(HEADER_NAME);
-        if (!StringUtils.hasLength(authHeader) || !StringUtils.startsWithIgnoreCase(authHeader, BEARER_PREFIX)) {
-            filterChain.doFilter(request, response);
+        var authHeader = getAuthHeader(request, response, filterChain);
+        if (authHeader == null) {
             return;
         }
 
-        // Обрезаем префикс и получаем имя пользователя из токена
         var jwt = authHeader.substring(BEARER_PREFIX.length());
         var username = jwtService.extractUserName(jwt);
 
+        authenticateUser(request, username, jwt);
+        filterChain.doFilter(request, response);
+    }
+
+    /**
+     * Метод для аутентификации пользователя с валидным jwt токеном
+     *
+     * @param username имя пользователя
+     * @param jwt      jwt токен
+     */
+    private void authenticateUser(HttpServletRequest request, String username, String jwt) {
         if (StringUtils.hasText(username) && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService
                     .loadUserByUsername(username);
 
-            // Если токен валиден, то аутентифицируем пользователя
             if (jwtService.isTokenValid(jwt, userDetails)) {
                 SecurityContext context = SecurityContextHolder.createEmptyContext();
 
@@ -66,6 +89,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.setContext(context);
             }
         }
-        filterChain.doFilter(request, response);
     }
 }

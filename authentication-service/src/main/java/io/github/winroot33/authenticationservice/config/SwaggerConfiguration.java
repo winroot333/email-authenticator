@@ -7,6 +7,11 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Класс конфигурации для swagger, open-api
+ *
+ * @author Mikhail Vasiliev (winroot123@gmail.com)
+ */
 @Configuration
 public class SwaggerConfiguration {
 

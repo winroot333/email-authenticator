@@ -46,8 +46,10 @@ class NotificationServiceIntegrationTest {
 
     @Autowired
     Environment env;
+
     @Autowired
     private NotificationService notificationService;
+
     @Autowired
     private EmbeddedKafkaBroker embeddedKafkaBroker;
 

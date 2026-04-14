@@ -4,7 +4,13 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
+/**
+ * Сущность кода подтверждения почты в системе
+ *
+ * @author Mikhail Vasiliev (winroot123@gmail.com)
+ */
 @Entity
 @Table(name = "confirmation_codes")
 @Getter
@@ -14,8 +20,8 @@ import java.time.LocalDateTime;
 @Builder
 public class ConfirmationCode {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column(nullable = false)
     private String code;

@@ -11,6 +11,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+/**
+ * Сервис для логина пользователя
+ *
+ * @author Mikhail Vasiliev (winroot123@gmail.com)
+ */
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {

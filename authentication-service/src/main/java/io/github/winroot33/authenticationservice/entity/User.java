@@ -9,6 +9,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Сущность пользователя в системе
+ *
+ * @author Mikhail Vasiliev (winroot123@gmail.com)
+ */
 @Entity
 @Getter
 @Setter

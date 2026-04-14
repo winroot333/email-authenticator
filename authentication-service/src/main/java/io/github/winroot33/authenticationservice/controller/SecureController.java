@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * @author Mikhail Vasiliev (winroot123@gmail.com)
+ */
 @RestController
 @RequestMapping("/secure")
 @Tag(name = "Защищенный эндпоинт")

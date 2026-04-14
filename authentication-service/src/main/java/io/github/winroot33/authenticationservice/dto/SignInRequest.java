@@ -5,6 +5,11 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+/**
+ * DTO для запроса входа в систему
+ *
+ * @author Mikhail Vasiliev (winroot123@gmail.com)
+ */
 @Schema(description = "Запрос на аутентификацию")
 public record SignInRequest(
 

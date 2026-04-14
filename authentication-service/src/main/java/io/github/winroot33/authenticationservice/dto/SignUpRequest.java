@@ -6,6 +6,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 
+/**
+ * DTO для запроса регистрации пользователя
+ *
+ * @author Mikhail Vasiliev (winroot123@gmail.com)
+ */
 @Schema(description = "Запрос на регистрацию")
 public record SignUpRequest(
         @Schema(description = "Адрес электронной почты", example = "admin@example.com",

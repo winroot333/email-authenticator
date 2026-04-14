@@ -25,6 +25,11 @@ import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
 
+/**
+ * Producer для Kafka уведомлений с нативный apache kafka
+ *
+ * @author Mikhail Vasiliev (winroot123@gmail.com)
+ */
 @Component
 @ConditionalOnProperty(name = "application.kafka-notification-topic.producer-type", havingValue = "native")
 @Slf4j
@@ -37,6 +42,9 @@ public class KafkaNativeNotificationProducer implements KafkaNotificationProduce
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
 
+    /**
+     * Инициализация продюсера
+     */
     @PostConstruct
     public void init() {
         Properties props = new Properties();
@@ -75,7 +83,7 @@ public class KafkaNativeNotificationProducer implements KafkaNotificationProduce
                     ));
 
             RecordMetadata metadata = producer.send(producerRecord).get();
-            log.info("Native Kafka sent: offset={}, partition={}",
+            log.info("Native Kafka sent: offset = {}, partition = {}",
                     metadata.offset(), metadata.partition());
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();

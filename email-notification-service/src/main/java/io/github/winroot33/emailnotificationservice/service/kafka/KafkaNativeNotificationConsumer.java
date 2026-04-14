@@ -17,6 +17,11 @@ import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * Consumer для отправки кодов подтверждения без Spring Kafka
+ *
+ * @author Mikhail Vasiliev (winroot123@gmail.com)
+ */
 @Slf4j
 public class KafkaNativeNotificationConsumer implements AutoCloseable {
 
@@ -88,10 +93,10 @@ public class KafkaNativeNotificationConsumer implements AutoCloseable {
 
             consumer.commitSync();
 
-            log.info("Native Kafka Successfully processed message: offset={}, partition={}",
+            log.info("Native Kafka Successfully processed message: offset = {}, partition = {}",
                     record.offset(), record.partition());
         } catch (Exception e) {
-            log.error("Native Kafka Failed to process message: offset={}, partition={}",
+            log.error("Native Kafka Failed to process message: offset = {}, partition = {}",
                     record.offset(), record.partition(), e);
         }
     }

@@ -9,6 +9,11 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Service;
 
+/**
+ * Consumer для отправки кодов подтверждения c использованием Spring Kafka
+ *
+ * @author Mikhail Vasiliev (winroot123@gmail.com)
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j

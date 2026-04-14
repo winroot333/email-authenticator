@@ -5,6 +5,11 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+/**
+ * DTO для запроса подтверждения почты
+ *
+ * @author Mikhail Vasiliev (winroot123@gmail.com)
+ */
 @Schema(description = "Запрос для подтверждения почты пользователя")
 public record EmailConfirmationRequest(
         @Schema(description = "Адрес электронной почты", example = "admin@example.com",
