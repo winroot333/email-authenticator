@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: authentication-service
+
+  kafka:
+    bootstrap-servers: localhost:9092,localhost:9094,localhost:9096
+
+  datasource:
+    url: jdbc:postgresql://localhost:5435/authentication-db
+    username: postgres
+    password: password
+    driver-class-name: org.postgresql.Driver
+
+cors:
+  allowed-origins:
+    - "http://localhost:8080"
+  allowed-methods: "GET,POST,PUT,DELETE,OPTIONS"
+  allowed-headers: "*"
+  allow-credentials: true
+
+application:
+  token:
+    signing:
+      key: 53A73E5F1C4E0A2D3B5F2D784E6AGG423D6F247D1F6E5C3A596D635A75327855
+  confirmation-code:
+    expiration-in-minutes: 15
+  kafka-notification-topic:
+    topic-name: "client-notification-event-topic"
+    partition-count: 3
+    replica-count: 2
+    producer-type: spring

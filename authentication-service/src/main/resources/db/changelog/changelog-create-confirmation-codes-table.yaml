@@ -1,0 +1,41 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-confirmation-codes-table
+      author: Mikhail
+      preConditions:
+        - tableExists:
+            tableName: users
+        - not:
+            - tableExists:
+                tableName: confirmation_codes
+      changes:
+        - createTable:
+            tableName: confirmation_codes
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_confirmation_codes
+
+              - column:
+                  name: code
+                  type: VARCHAR(6)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_email_codes_user
+                    references: users(id)
+
+              - column:
+                  name: expires_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false

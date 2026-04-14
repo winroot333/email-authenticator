@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: email-notification-service
+  kafka:
+    bootstrap-servers: localhost:9092,localhost:9094,localhost:9096
+    consumer:
+      group-id: notification-consumer-event-group
+
+application:
+  kafka-notification-topic:
+    name: "client-notification-event-topic"
+    consumer-type: native
